@@ -8,21 +8,64 @@ generator client {
   provider = "prisma-client-js"
 }
 
+// model User {
+//   id        String   @id @default(auto()) @map("_id") @db.ObjectId
+//   createdAt DateTime @default(now())
+//   firstName String
+//   lastName  String?
+//   email     String   @unique
+//   posts     Post[]
+// }
+
+// model Post {
+//   id        String   @id @default(auto()) @map("_id") @db.ObjectId
+//   createdAt DateTime @default(now())
+//   title     String
+//   body      String?
+//   views     Int      @default(0)
+//   author    User?    @relation(fields: [authorId], references: [id])
+//   authorId  String?  @db.ObjectId
+// }
+
+
 model User {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  username  String   @unique
+  password  String
   createdAt DateTime @default(now())
-  firstName String
-  lastName  String?
-  email     String   @unique
-  posts     Post[]
 }
 
-model Post {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  createdAt DateTime @default(now())
-  title     String
-  body      String?
-  views     Int      @default(0)
-  author    User?    @relation(fields: [authorId], references: [id])
-  authorId  String?  @db.ObjectId
+model Province {
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  province      String   @unique
+  licensePlate  License_Plate?
 }
+
+model License_Plate {
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  first_name      String   
+  last_name       String   
+  license_number  String   
+  province        Province  @relation(fields: [provinceId], references: [id])
+  provinceId      String @unique @db.ObjectId
+  accessHistory   Access_History[]
+  createdAt       DateTime @default(now())
+}
+
+model Access_History {
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  access_status   Boolean
+  image_source    String
+  licensePlate    License_Plate @relation(fields: [LicenseId], references: [id])
+  LicenseId       String  @db.ObjectId
+  createdAt       DateTime @default(now())
+}
+
+model detection_History {
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  number_car      Int
+  number_empty    Int
+  image_source    String
+  createdAt       DateTime @default(now())
+}
+
