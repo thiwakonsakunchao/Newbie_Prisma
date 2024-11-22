@@ -32,13 +32,14 @@ model User {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   username  String   @unique
   password  String
+  refreshtoken String?
   createdAt DateTime @default(now())
 }
 
 model Province {
   id            String   @id @default(auto()) @map("_id") @db.ObjectId
   province      String   @unique
-  licensePlate  License_Plate?
+  licensePlate  License_Plate[]
 }
 
 model License_Plate {
@@ -47,7 +48,7 @@ model License_Plate {
   last_name       String   
   license_number  String   
   province        Province  @relation(fields: [provinceId], references: [id])
-  provinceId      String @unique @db.ObjectId
+  provinceId      String  @db.ObjectId
   accessHistory   Access_History[]
   createdAt       DateTime @default(now())
 }
