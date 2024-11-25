@@ -12,6 +12,14 @@ export const detectionSchema = z.object({
   image_source: z.string()
 })
 
+export const manyDetectionSchema = z.array(
+  z.object({
+    number_car: z.number(),
+    number_empty: z.number(),
+    image_source: z.string()
+  })
+)
+
 router.get('/', detectionController.getAllDetection)
 router.get('/:id', detectionController.getDetectionById)
 router.post(
@@ -27,5 +35,11 @@ router.put(
   detectionController.updateDetection
 )
 router.delete('/delete/:id', detectionController.deleteDetection)
+router.post(
+  '/manyCreate',
+  accessTokenValidate,
+  validatorInput(manyDetectionSchema),
+  detectionController.createMultipleDetection
+)
 
 export default router

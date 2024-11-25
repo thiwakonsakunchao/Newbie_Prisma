@@ -166,3 +166,35 @@ export const deleteDetection = async (
     })
   }
 }
+
+export const createMultipleDetection = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  let detections = req.body
+
+  if (Array.isArray(detections) === false) {
+    detections = Object.values(detections)
+  }
+
+  try {
+    const createDetections = await prisma.$transaction(
+      detections.map((detection: any) => {
+        return db.create({
+          data: detection
+        })
+      })
+    )
+
+    res.status(200).json({
+      message: 'Create Multiple Detections La',
+      createDetections
+    })
+  } catch (error: any) {
+    console.error('Error in createMultipleDetection:', error)
+    res.status(500).json({
+      message: 'Error Na',
+      error: error.message || error
+    })
+  }
+}
