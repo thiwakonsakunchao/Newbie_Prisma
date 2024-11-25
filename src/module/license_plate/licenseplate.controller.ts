@@ -191,21 +191,20 @@ export const createLicensePlateWithAccess = async (
   const { licensePlate, accessHistory } = req.body
 
   try {
-    const exitstingLicense = await db.findFirst({
-      where: {
-        license_number: licensePlate.license_number,
-        provinceId: licensePlate.provinceId
-      }
-    })
-
-    if (exitstingLicense) {
-      res.status(400).json({
-        message: 'Exits Na Ja'
-      })
-      return
-    }
-
     const result = await prisma.$transaction(async (prismaTransaction) => {
+      const exitstingLicense = await db.findFirst({
+        where: {
+          license_number: licensePlate.license_number,
+          provinceId: licensePlate.provinceId
+        }
+      })
+
+      if (exitstingLicense) {
+        res.status(400).json({
+          message: 'Exits Na Ja'
+        })
+        return
+      }
       const newLicensePlate = await prismaTransaction.license_Plate.create({
         data: {
           first_name: licensePlate.first_name,
