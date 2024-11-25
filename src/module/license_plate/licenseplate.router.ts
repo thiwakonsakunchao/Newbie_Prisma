@@ -13,6 +13,18 @@ export const licenseSchema = z.object({
   provinceId: z.string()
 })
 
+export const licenseWithAccessSchema = z.object({
+  licensePlate: z.object({
+    first_name: z.string(),
+    last_name: z.string(),
+    license_number: z.string(),
+    provinceId: z.string()
+  }),
+  accessHistory: z.array(
+    z.object({ access_status: z.boolean(), image_source: z.string() })
+  )
+})
+
 router.get('/', licenseController.getAllLicense)
 router.get('/:id', licenseController.getLicenseById)
 router.post(
@@ -31,6 +43,11 @@ router.delete(
   '/delete/:id',
   accessTokenValidate,
   licenseController.deleteLicense
+)
+router.post(
+  '/createLicenseWithAccess',
+  validatorInput(licenseWithAccessSchema),
+  licenseController.createLicensePlateWithAccess
 )
 
 export default router
